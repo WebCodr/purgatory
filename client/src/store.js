@@ -20,17 +20,31 @@ export default new Vuex.Store({
     },
     isDarkModeEnabled(state) {
       return state.user.isDarkModeEnabled
+    },
+    getInmateById: state => id => {
+      return state.inmates.find(inmate => inmate.id === id)
     }
   },
   mutations: {
-    updateInmates(store, inmates) {
-      store.inmates = inmates
+    updateInmates(state, inmates) {
+      state.inmates = inmates
     },
-    addInmate(store, inmate) {
+    addInmate(state, inmate) {
       inmate['id'] = uuid()
       inmate['date'] = '2019-05-06'
       inmate['moderator'] = 'MadCat'
-      store.inmates.push(inmate)
+      state.inmates.push(inmate)
+    },
+    updateInmate(state, inmate) {
+      const id = inmate.id
+      let currentInmate = state.inmates.find(inmate => inmate.id === id)
+
+      if (currentInmate) {
+        Object.assign(currentInmate, inmate)
+      }
+    },
+    deleteInmate(state, inmateId) {
+      state.inmates = state.inmates.filter(inmate => inmate.id !== inmateId)
     },
     toggleDarkMode(state) {
       state.user.isDarkModeEnabled = !state.user.isDarkModeEnabled

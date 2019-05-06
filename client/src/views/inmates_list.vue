@@ -13,7 +13,8 @@
       ></v-progress-linear>
       <template v-slot:items="props">
         <td class="justify-center layout px-0">
-          <v-icon small>edit</v-icon>
+          <v-icon @click="goToInmate(props.item.id)" small>edit</v-icon>
+          <v-icon @click="deleteInmate(props.item.id)" small>delete</v-icon>
         </td>
         <td>{{ props.item.date }}</td>
         <td>{{ props.item.moderator }}</td>
@@ -49,6 +50,14 @@ export default {
     ...mapState({
       inmates: state => state.inmates
     })
+  },
+  methods: {
+    goToInmate(id) {
+      this.$router.push({ name: 'EditInmate', params: { id } })
+    },
+    deleteInmate(id) {
+      this.$store.commit('deleteInmate', id)
+    }
   }
 }
 </script>

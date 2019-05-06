@@ -37,6 +37,13 @@
 
 <script>
 export default {
+  created() {
+    const inmate = this.$store.getters.getInmateById(this.$route.params.id)
+
+    if (inmate) {
+      this.inmate = inmate
+    }
+  },
   data() {
     return {
       inmate: {
@@ -48,7 +55,7 @@ export default {
   },
   methods: {
     save() {
-      this.$store.commit('addInmate', this.inmate)
+      this.$store.commit('updateInmate', this.inmate)
       this.$router.push({ name: 'InmatesList' })
     }
   }
