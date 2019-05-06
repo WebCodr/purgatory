@@ -17,7 +17,7 @@
         </td>
         <td>{{ props.item.date }}</td>
         <td>{{ props.item.moderator }}</td>
-        <td>{{ props.item.inmate }}</td>
+        <td>{{ props.item.name }}</td>
         <td>{{ props.item.reason }}</td>
       </template>
     </v-data-table>
@@ -25,7 +25,12 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
+  created() {
+    this.$store.dispatch('getInmates')
+  },
   data() {
     return {
       headers: [
@@ -37,24 +42,13 @@ export default {
         { text: 'Moderator', sortable: false },
         { text: 'Inmate', value: 'string' },
         { text: 'Reason', sortable: false }
-      ],
-      inmates: [
-        {
-          date: '2019-04-28',
-          inmate: 'Troll',
-          moderator: 'MadCat',
-          reason: 'Trolling',
-          url: 'https://google.de'
-        },
-        {
-          date: '2019-04-27',
-          inmate: 'Troll 2',
-          moderator: 'DarkFantasy[me]',
-          reason: 'Trolling',
-          url: 'https://google.de'
-        }
       ]
     }
+  },
+  computed: {
+    ...mapState({
+      inmates: state => state.inmates
+    })
   }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <v-app dark>
+  <v-app :dark="user.isDarkModeEnabled">
     <v-navigation-drawer v-model="drawer.open" absolute temporary>
       <v-toolbar flat class="transparent">
         <v-list class="pa-0">
@@ -9,7 +9,7 @@
             </v-list-tile-avatar>
 
             <v-list-tile-content>
-              <v-list-tile-title>MadCat</v-list-tile-title>
+              <v-list-tile-title>{{ user.name }}</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
@@ -28,6 +28,16 @@
 
           <v-list-tile-content>
             <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <v-list-tile @click="toggleDarkMode">
+          <v-list-tile-action>
+            <v-icon>{{ darkModeStatusIcon }}</v-icon>
+          </v-list-tile-action>
+
+          <v-list-tile-content>
+            <v-list-tile-title>Toggle Dark Mode</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -52,20 +62,28 @@
 
 <script>
 import gravatar from 'gravatar'
+import { mapState } from 'vuex'
 
 export default {
   name: 'App',
   components: {},
   computed: {
+    ...mapState({
+      user: state => state.user,
+      darkModeStatusIcon: state => {
+        if (state.user.isDarkModeEnabled) {
+          return 'toggle_on'
+        }
+
+        return 'toggle_off'
+      }
+    }),
     gravatarUrl() {
       return gravatar.url(this.user.email)
     }
   },
   data() {
     return {
-      user: {
-        email: 'madcat.me@gmail.com'
-      },
       drawer: {
         open: false
       },
@@ -78,6 +96,11 @@ export default {
           title: 'Home',
           route: 'Home',
           icon: 'home'
+        },
+        {
+          title: 'Add Inmate',
+          route: 'AddInmate',
+          icon: 'add_circle_outline'
         },
         {
           title: 'Inmates',
@@ -100,13 +123,20 @@ export default {
   methods: {
     toggleDrawer() {
       this.drawer.open = !this.drawer.open
+    },
+    toggleDarkMode() {
+      this.$store.commit('toggleDarkMode')
     }
   }
 }
 </script>
 
 <style lang="scss">
-.v-navigation-drawer a.primary--text {
+.v-navigation-drawer.theme--dark a.primary--text {
   color: #fff !important;
+}
+
+.v-navigation-drawer.theme--light a.primary--text {
+  color: rgba(0, 0, 0, 0.87) !important;
 }
 </style>

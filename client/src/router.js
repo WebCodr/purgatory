@@ -24,6 +24,15 @@ export default new Router({
       meta: {
         title: 'Inmates'
       }
+    },
+    {
+      path: '/inmates/add',
+      name: 'AddInmate',
+      component: () =>
+        import(/* webpackChunkName: "inmates" */ './views/add_inmate.vue'),
+      meta: {
+        title: 'Add Inmate'
+      }
     }
     // {
     //   path: '/about',
