@@ -45,7 +45,7 @@
 
     <v-toolbar app :fixed="toolbar.fixed" :clipped-left="toolbar.clippedLeft">
       <v-toolbar-side-icon @click.stop="toggleDrawer"></v-toolbar-side-icon>
-      <v-toolbar-title>{{ $route.meta.title }}</v-toolbar-title>
+      <v-toolbar-title>{{ quote }}</v-toolbar-title>
     </v-toolbar>
 
     <v-content>
@@ -62,21 +62,17 @@
 
 <script>
 import gravatar from 'gravatar'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'App',
   components: {},
   computed: {
     ...mapState({
-      user: state => state.user,
-      darkModeStatusIcon: state => {
-        if (state.user.isDarkModeEnabled) {
-          return 'toggle_on'
-        }
-
-        return 'toggle_off'
-      }
+      user: state => state.user
+    }),
+    ...mapGetters({
+      darkModeStatusIcon: 'getDarkModeStatusIcon'
     }),
     gravatarUrl() {
       return gravatar.url(this.user.email)
@@ -84,6 +80,7 @@ export default {
   },
   data() {
     return {
+      quote: this.$store.getters.getRandomQuote(),
       drawer: {
         open: false
       },
@@ -118,6 +115,11 @@ export default {
           icon: 'settings'
         }
       ]
+    }
+  },
+  watch: {
+    $route() {
+      this.quote = this.$store.getters.getRandomQuote()
     }
   },
   methods: {
